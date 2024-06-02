@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import express, { Request } from "express";
 import { encodeTransaction } from "../utils";
-import { backendActor } from "../config";
-import { ic } from "azle";
+import { backendActor, evmActor } from "../config";
+import { Canister, blob, ic, serialize, update } from "azle";
 import { managementCanister } from "azle/canisters/management";
 import { EventData, InsertSpace, QueryResponse, VoteData } from "../models";
 import {
@@ -115,7 +115,7 @@ app.post("/api/vote", async (req: Request<{}, {}, VoteData>, res) => {
   const isEthAddress = req.body.message.address.startsWith("0x");
 
   if (!isEthAddress) {
-    res.status(400).json({ message: "jebat btc 🤠" });
+    res.status(400).json({ message: "Bitcoin is not supported yet" });
     return;
   }
 
@@ -168,25 +168,6 @@ app.get("/api/power", async (req: Request<{}, {}, {}>, res) => {
 
   let power = await getVotingPower(address, spaceId, blockHeight);
   res.json({ votingPower: power.toString() });
-});
-
-app.get("/au", async (req: Request<{}, {}, {}>, res) => {
-  // ethers.Transaction.from({
-  //     to
-  // })
-  // const a = await makeEvmbackendActor();
-  // a.eth_sendRawTransaction()
-
-  // const x = await ic.call(managementCanister.ecdsa_public_key, {args: [
-  //     {
-  //         // canister_id: [],
-  //         // method_name: "ecdsa_public_key",
-  //     }
-  // ]});
-
-  // console.log(x);
-
-  res.json({ message: "Ahoj pepo" });
 });
 
 app.get("/api/spaces", async (req: Request<{}, {}, {}>, res) => {
